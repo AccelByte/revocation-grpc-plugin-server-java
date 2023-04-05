@@ -10,7 +10,7 @@ import net.accelbyte.sdk.api.iam.models.ModelUserResponseV3;
 import net.accelbyte.sdk.api.iam.operations.users.PublicGetMyUserV3;
 import net.accelbyte.sdk.api.platform.models.RevocationResult;
 import net.accelbyte.sdk.api.platform.models.OrderInfo;
-import net.accelbyte.sdk.api.platform.models.CreditRevocation;
+import net.accelbyte.sdk.api.platform.models.ItemRevocation;
 import net.accelbyte.sdk.api.iam.wrappers.Users;
 import net.accelbyte.sdk.core.AccelByteConfig;
 import net.accelbyte.sdk.core.AccelByteSDK;
@@ -106,12 +106,12 @@ public class PlatformDemo implements Callable<Integer> {
                 System.out.println("revocation history Id: " + revocationResult.getId());
                 System.out.println("revocation status: " + revocationResult.getStatus());
 
-                for (CreditRevocation revocation : revocationResult.getCreditRevocations()) {
-                    System.out.println("wallet Id: " + revocation.getWalletId());
-                    System.out.println("currency code: " + revocation.getCurrencyCode());
-                    System.out.println("balance origin: " + revocation.getBalanceOrigin());
-                    System.out.println("amount: " + revocation.getAmount());
-                    System.out.println("revocation strategy: " + revocation.getRevocationStrategy());
+                for (ItemRevocation revocation : revocationResult.getItemRevocations()) {
+                    System.out.println("item Id: " + revocation.getItemId());
+                    System.out.println("item sku: " + revocation.getItemSku());
+                    System.out.println("item type: " + revocation.getItemType());
+                    System.out.println("quantity: " + revocation.getQuantity());
+                    System.out.println("revocation strategy: " + revocation.getStrategy());
                     System.out.println("skipped: " + revocation.getSkipped());
                     System.out.println("reason: " + revocation.getReason());
                     System.out.println("custom revocation: " + revocation.getCustomRevocation());

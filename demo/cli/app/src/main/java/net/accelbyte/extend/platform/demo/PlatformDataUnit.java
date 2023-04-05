@@ -290,15 +290,15 @@ public class PlatformDataUnit {
     }
 
     public RevocationResult revoke(String userId, String orderNum, String itemId) throws Exception {
-        RevokeCurrency currency = RevokeCurrency.builder()
-                .namespace(abNamespace)
-                .currencyCode(currencyCode)
+        RevokeItem item = RevokeItem.builder()
+                .itemIdentityType(RevokeItem.ItemIdentityType.ITEMID.toString())
+                .itemIdentity(itemId)
                 .build();
 
         RevokeEntry entry = RevokeEntry.builder()
-                .currency(currency)
+                .item(item)
                 .quantity(1)
-                .type(RevokeEntry.Type.CURRENCY.name()).build();
+                .type(RevokeEntry.Type.ITEM.name()).build();
 
         RevocationRequest request = RevocationRequest.builder()
                 .source(RevocationRequest.Source.ORDER.name())
