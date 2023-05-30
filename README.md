@@ -22,7 +22,7 @@ contains a docker compose which consists of these `dependency services`.
 
 ## Overview
 
-This repository contains a `revocation gRPC server app` written in `Java`. It provides a simple custom rotating shop items function for platform service in AccelByte Gaming Services.
+This repository contains a `revocation gRPC server app` written in `Java`. It provides a simple custom revocation function for platform service in AccelByte Gaming Services.
 
 This sample app also shows how this `gRPC server` can be instrumented for better observability. 
 It is configured by default to send metrics, traces, and logs to the observability `dependency services` in [grpc-plugin-dependencies](https://github.com/AccelByte/grpc-plugin-dependencies).

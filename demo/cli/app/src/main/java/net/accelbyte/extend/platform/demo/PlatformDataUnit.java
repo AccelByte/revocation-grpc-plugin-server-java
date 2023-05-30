@@ -226,12 +226,12 @@ public class PlatformDataUnit {
                     .title(nItemInfo.getTitle())
                     .build());
 
-            final Map<String,List<RegionDataItem>> iRegionData = new HashMap<>();
-            final List<RegionDataItem> regionItem = new ArrayList<>();
-            regionItem.add(RegionDataItem.builder()
+            final Map<String,List<RegionDataItemDTO>> iRegionData = new HashMap<>();
+            final List<RegionDataItemDTO> regionItem = new ArrayList<>();
+            regionItem.add(RegionDataItemDTO.builder()
                     .currencyCode(currencyCode)
                     .currencyNamespace(abNamespace)
-                    .currencyTypeFromEnum(RegionDataItem.CurrencyType.VIRTUAL)
+                    .currencyTypeFromEnum(RegionDataItemDTO.CurrencyType.VIRTUAL)
                     .price(0)
                     .build());
             iRegionData.put("US",regionItem);
