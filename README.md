@@ -51,9 +51,9 @@ It is configured by default to send metrics, traces, and logs to the observabili
 
     a. Base URL: https://demo.accelbyte.io.
 
-    b. [Create a Game Namespace](https://docs.accelbyte.io/esg/uam/namespaces.html#tutorials) if you don't have one yet. Keep the `Namespace ID`.
+    b. [Create a Game Namespace](https://docs.accelbyte.io/gaming-services/services/access/namespaces/manage-your-namespaces/#create-a-game-namespace) if you don't have one yet. Keep the `Namespace ID`.
 
-    c. [Create an OAuth Client](https://docs.accelbyte.io/guides/access/iam-client.html) with `confidential` client type. Keep the `Client ID` and `Client Secret`.
+    c. [Create an OAuth Client](https://docs.accelbyte.io/gaming-services/services/access/authorization/manage-access-control-for-applications/#create-an-iam-client) with `confidential` client type. Keep the `Client ID` and `Client Secret`.
 
 ## Setup
 
@@ -174,17 +174,53 @@ The custom functions in this sample app can be tested locally using `postman`.
 }
 ```
 
-### Test Functionality using CLI Demo App
+### Integration Test with AccelByte Gaming Services
 
-The functionality of `gRPC server` methods can be tested with AccelByte Gaming Service using CLI demo app [here](demo/cli/).
-Read its [readme](demo/cli/README.md) on how to use it.
+After passing functional test in local development environment, you may want to perform
+integration test with `AccelByte Gaming Services`. Here, we are going to expose the `gRPC server`
+in local development environment to the internet so that it can be called by
+`AccelByte Gaming Services`. To do this without requiring public IP, we can use [ngrok](https://ngrok.com/)
+
+
+1. Run the `dependency services` by following the `README.md` in the [grpc-plugin-dependencies](https://github.com/AccelByte/grpc-plugin-dependencies) repository.
+
+   > :warning: **Make sure to start dependency services with mTLS disabled for now**: It is currently not supported by `AccelByte Gaming Services`, but it will be enabled later on to improve security. If it is enabled, the gRPC client calls without mTLS will be rejected.
+
+
+2. Run this `gRPC server` sample app.
+
+3. Sign-in/sign-up to [ngrok](https://ngrok.com/) and get your auth token in `ngrok` dashboard.
+
+4. In [grpc-plugin-dependencies](https://github.com/AccelByte/grpc-plugin-dependencies) repository folder, run the following command to expose the `Envoy` proxy port connected to the `gRPC server` in local development environment to the internet. Take a note of the `ngrok` forwarding URL e.g. `tcp://0.tcp.ap.ngrok.io:xxxxx`.
+
+   ```
+   make ngrok NGROK_AUTHTOKEN=xxxxxxxxxxx    # Use your ngrok auth token
+   ```
+
+5. [Create an OAuth Client](https://docs.accelbyte.io/gaming-services/services/access/authorization/manage-access-control-for-applications/#create-an-iam-client) with `confidential` client type with the following permissions. Keep the `Client ID` and `Client Secret`. This is different from the Oauth Client from the Prerequisites section and it is required by CLI demo app [here](demo/cli/) in the next step to register the `gRPC Server` URL.
+
+   - ADMIN:NAMESPACE:{namespace}:PLUGIN:REVOCATION [READ, UPDATE, DELETE]
+   - ADMIN:NAMESPACE:{namespace}:REVOCATION [UPDATE]
+   - ADMIN:NAMESPACE:{namespace}:STORE [CREATE, READ, UPDATE, DELETE]
+   - ADMIN:NAMESPACE:{namespace}:CATEGORY [CREATE]
+   - ADMIN:NAMESPACE:{namespace}:CURRENCY [CREATE, DELETE]
+   - ADMIN:NAMESPACE:{namespace}:ITEM [CREATE, DELETE]
+   - ADMIN:NAMESPACE:{namespace}:USER:*:REVOCATION [UPDATE]
+
+   > :warning: **Oauth Client created in this step is different from the one from Prerequisites section:** It is required by CLI demo app in the next step to register the `gRPC Server` URL.
+
+6. Create a user for testing. Keep the `Username` and `Password`.
+
+7. Refer to [Demo CLI](demo/cli/README.md) readme on how to use the demo cli app to test the service.
+
+> :warning: **Ngrok free plan has some limitations**: You may want to use paid plan if the traffic is high.
 
 ### Deploy to AccelByte Gaming Services
 
 After passing functional test against locally running sample app you may want to deploy the sample app to AGS (AccelByte Gaming Services).
 
 1. Download and setup [extend-helper-cli](https://github.com/AccelByte/extend-helper-cli/)
-2. Create new Extend App on Admin Portal, please refer to docs [here](https://docs-preview.accelbyte.io/gaming-services/services/customization/customize-entitlement-revocation/)
+2. Create new Extend App on Admin Portal, please refer to docs [here](https://docs.accelbyte.io/gaming-services/services/customization/override-ags-feature/getting-started-with-entitlement-revocation-customization/)
 3. Do docker login using `extend-helper-cli`, please refer to its documentation
 4. Build and push sample app docker image to AccelByte ECR using the following command inside sample app directory
    ```
@@ -192,14 +228,4 @@ After passing functional test against locally running sample app you may want to
    ```
    > Note: the REPO_URL is obtained from step 2 in the app detail on the 'Repository Url' field
 
-Please refer to [getting started docs](https://docs-preview.accelbyte.io/gaming-services/services/customization/customize-entitlement-revocation/) for more detailed steps on how to deploy sample app to AccelByte Gaming Service.
-
-### Building Multi-Arch Docker Image
-
-To create a multi-arch docker image of the project, use the following command.
-
-```
-make imagex
-```
-
-For more details about the command, see [Makefile](Makefile).
+Please refer to [getting started docs](https://docs.accelbyte.io/gaming-services/services/customization/override-ags-feature/getting-started-with-entitlement-revocation-customization/) for more detailed steps on how to deploy sample app to AccelByte Gaming Service.

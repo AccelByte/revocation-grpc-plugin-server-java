@@ -33,9 +33,11 @@ public class AppConfigRepository extends DefaultConfigRepository {
     @Option(names = {"-t","--category"}, description = "Store's category path for items", defaultValue = "")
     private String platformCategoryPath;
 
-    @Parameters(index = "0", paramLabel = "GRPC_TARGET", description = "Grpc plugin target server url.")
+    @Option(names = {"-g","--grpc-target"}, description = "Grpc plugin target server url.", defaultValue = "")
     private String grpcServerUrl;
 
+    @Option(names = {"-a","--extend-app"}, description = "Extend app name.", defaultValue = "")
+    private String extendAppName;
 
     @Override
     public String getClientId() {
@@ -80,6 +82,15 @@ public class AppConfigRepository extends DefaultConfigRepository {
         return grpcServerUrl;
     }
 
+    public String getExtendAppName() {
+        if (extendAppName.equals("")) {
+            extendAppName = System.getenv("AB_EXTEND_APP_NAME");
+            if (extendAppName == null)
+                extendAppName = "";
+        }
+        return extendAppName;
+    }
+
     public String getUsername() throws Exception {
         if (abUsername.equals("")) {
             abUsername = System.getenv("AB_USERNAME");
@@ -102,7 +113,7 @@ public class AppConfigRepository extends DefaultConfigRepository {
 
     public String getCategoryPath(){
         if (platformCategoryPath.equals(""))
-            return "/customRevocationtest";
+            return "/customitemrotationtest";
         else
             return  "/" + platformCategoryPath.trim();
     }

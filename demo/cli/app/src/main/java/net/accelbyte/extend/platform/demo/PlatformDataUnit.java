@@ -17,8 +17,7 @@ import net.accelbyte.sdk.api.platform.operations.item.CreateItem;
 import net.accelbyte.sdk.api.platform.operations.section.CreateSection;
 import net.accelbyte.sdk.api.platform.operations.section.PublicListActiveSections;
 import net.accelbyte.sdk.api.platform.operations.section.UpdateSection;
-import net.accelbyte.sdk.api.platform.operations.service_plugin_config.DeleteServicePluginConfig;
-import net.accelbyte.sdk.api.platform.operations.service_plugin_config.UpdateServicePluginConfig;
+import net.accelbyte.sdk.api.platform.operations.service_plugin_config.*;
 import net.accelbyte.sdk.api.platform.operations.store.CreateStore;
 import net.accelbyte.sdk.api.platform.operations.store.DeleteStore;
 import net.accelbyte.sdk.api.platform.operations.store.ListStores;
@@ -309,23 +308,42 @@ public class PlatformDataUnit {
         return revocationWrapper.doRevocation(input);
     }
 
-    public void setPlatformServiceGrpcTarget() throws Exception {
+    public void setPlatformServiceGrpcTargetForRevocation() throws Exception {
+        ServicePluginConfig wrapper = new ServicePluginConfig(abSdk);
+
         final String abGrpcServerUrl = config.getGrpcServerUrl();
         if (abGrpcServerUrl.equals(""))
-            throw new Exception("Grpc Server Url is empty!");
+        {
+            final String abExtendAppName = config.getExtendAppName();
+            if (abExtendAppName.equals(""))
+                throw new Exception("Grpc Server Url or extend app name is not specified!");
 
-        ServicePluginConfig wrapper = new ServicePluginConfig(abSdk);
-        wrapper.updateServicePluginConfig(UpdateServicePluginConfig.builder()
-                .namespace(abNamespace)
-                .body(ServicePluginConfigUpdate.builder()
-                        .grpcServerAddress(abGrpcServerUrl)
-                        .build())
-                .build());
+            wrapper.updateRevocationPluginConfig(UpdateRevocationPluginConfig.builder()
+                    .namespace(abNamespace)
+                    .body(RevocationPluginConfigUpdate.builder()
+                            .extendTypeFromEnum(RevocationPluginConfigUpdate.ExtendType.APP)
+                            .appConfig(AppConfig.builder()
+                                    .appName(abExtendAppName)
+                                    .build())
+                            .build())
+                    .build());
+        } else {
+            wrapper.updateRevocationPluginConfig(UpdateRevocationPluginConfig.builder()
+                    .namespace(abNamespace)
+                    .body(RevocationPluginConfigUpdate.builder()
+                            .extendTypeFromEnum(RevocationPluginConfigUpdate.ExtendType.CUSTOM)
+                            .customConfig(BaseCustomConfig.builder()
+                                    .connectionTypeFromEnum(BaseCustomConfig.ConnectionType.INSECURE)
+                                    .grpcServerAddress(abGrpcServerUrl)
+                                    .build())
+                            .build())
+                    .build());
+        }
     }
 
-    public void unsetPlatformServiceGrpcTarget() throws Exception {
+    public void unsetPlatformServiceGrpcTargetForRevocation() throws Exception {
         ServicePluginConfig wrapper = new ServicePluginConfig(abSdk);
-        wrapper.deleteServicePluginConfig(DeleteServicePluginConfig.builder()
+        wrapper.deleteRevocationPluginConfig(DeleteRevocationPluginConfig.builder()
                 .namespace(abNamespace)
                 .build());
     }
