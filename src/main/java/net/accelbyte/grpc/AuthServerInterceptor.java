@@ -31,7 +31,7 @@ public class AuthServerInterceptor implements ServerInterceptor {
 
     private String namespace;
 
-    @Value("${plugin.grpc.server.interceptor.auth.enabled:true}")
+    @Value("${plugin.grpc.server.interceptor.auth.enabled:false}")
     private boolean enabled;
 
 
