@@ -53,8 +53,6 @@ export AB_CLIENT_ID='xxxxxxxxxx'
 export AB_CLIENT_SECRET='xxxxxxxxxx'
 
 export AB_NAMESPACE='namespace'
-export AB_USERNAME='USERNAME'
-export AB_PASSWORD='PASSWORD'
 ```
 If these variables aren't provided, you'll need to supply the required values via command line arguments.
 
@@ -76,11 +74,11 @@ CLI demo app requires 1 parameter - the grpc server url
 
 - Without any environment variables
 ```bash
-$ ./app/target/install/app/bin/app -b='https://test.accelbyte.io' -c='CLIENT-ID-VALUE' -s='CLIENT-SECRET-VALUE' -n='NAMESPACE-VALUE' -u='<USERNAME>' -p='<PASSWORD>' -g='<GRPC_PLUGIN_SERVER_URL>'
+$ ./app/target/install/app/bin/app -b='https://test.accelbyte.io' -c='CLIENT-ID-VALUE' -s='CLIENT-SECRET-VALUE' -n='NAMESPACE-VALUE' -g='<GRPC_PLUGIN_SERVER_URL>'
 ```
 - With basic environment variables setup
 ```bash
-$ ./app/target/install/app/bin/app -u='<USERNAME>' -p='<PASSWORD>' -n='<NAMESPACE-VALUE>' -g='<GRPC_PLUGIN_SERVER_URL>'
+$ ./app/target/install/app/bin/app -n='<NAMESPACE-VALUE>' -g='<GRPC_PLUGIN_SERVER_URL>'
 ```
 - With all environment variables setup
 ```bash

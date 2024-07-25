@@ -270,22 +270,23 @@ public class PlatformDataUnit {
     public OrderInfo createOrder(String userId, List<SimpleItemInfo> itemInfoList) throws Exception {
         SimpleItemInfo simpleItemInfo = itemInfoList.get(0);
 
-        OrderCreate orderCreate = OrderCreate.builder()
+        AdminOrderCreate adminOrderCreate = AdminOrderCreate.builder()
                 .currencyCode(currencyCode)
-                .itemId(simpleItemInfo.getId())
-                .price(0)
-                .quantity(1)
                 .discountedPrice(0)
+                .itemId(simpleItemInfo.getId())
+                .quantity(1)
+                .region("US")
+                .price(0)
                 .build();
 
-        PublicCreateUserOrder publicCreateUserOrder = PublicCreateUserOrder.builder()
+        AdminCreateUserOrder adminCreateUserOrder = AdminCreateUserOrder.builder()
                 .namespace(abNamespace)
                 .userId(userId)
-                .body(orderCreate)
+                .body(adminOrderCreate)
                 .build();
 
         net.accelbyte.sdk.api.platform.wrappers.Order orderWrapper = new net.accelbyte.sdk.api.platform.wrappers.Order(abSdk);
-        return orderWrapper.publicCreateUserOrder(publicCreateUserOrder);
+        return orderWrapper.adminCreateUserOrder(adminCreateUserOrder);
     }
 
     public RevocationResult revoke(String userId, String orderNum, String itemId) throws Exception {

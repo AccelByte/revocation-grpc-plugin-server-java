@@ -24,12 +24,6 @@ public class AppConfigRepository extends DefaultConfigRepository {
     @Option(names = {"-n","--namespace"}, description = "AGS namespace", defaultValue = "")
     private String abNamespace;
 
-    @Option(names = {"-u","--username"}, description = "AGS Username", defaultValue = "")
-    private String abUsername;
-
-    @Option(names = {"-p","--password"}, description = "AGS User's password", defaultValue = "")
-    private String abPassword;
-
     @Option(names = {"-t","--category"}, description = "Store's category path for items", defaultValue = "")
     private String platformCategoryPath;
 
@@ -89,26 +83,6 @@ public class AppConfigRepository extends DefaultConfigRepository {
                 extendAppName = "";
         }
         return extendAppName;
-    }
-
-    public String getUsername() throws Exception {
-        if (abUsername.equals("")) {
-            abUsername = System.getenv("AB_USERNAME");
-            if (abUsername == null) {
-                throw new Exception("Username is not specified.");
-            }
-        }
-        return abUsername;
-    }
-
-    public String getPassword() throws Exception {
-        if (abPassword.equals("")) {
-            abPassword = System.getenv("AB_PASSWORD");
-            if (abPassword == null) {
-                throw new Exception("User's password is not specified.");
-            }
-        }
-        return abPassword;
     }
 
     public String getCategoryPath(){

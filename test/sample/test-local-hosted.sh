@@ -29,7 +29,7 @@ fi
 
 echo '# Check environment variables'
 
-variables=(AB_BASE_URL AB_CLIENT_ID AB_CLIENT_SECRET AB_NAMESPACE AB_USERNAME AB_PASSWORD NGROK_AUTHTOKEN)
+variables=(AB_BASE_URL AB_CLIENT_ID AB_CLIENT_SECRET AB_NAMESPACE NGROK_AUTHTOKEN)
 
 for variable_name in "${variables[@]}"; do
   if [ -z "${!variable_name}" ]; then

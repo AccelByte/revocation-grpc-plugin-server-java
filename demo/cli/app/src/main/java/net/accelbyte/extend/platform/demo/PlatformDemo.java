@@ -6,17 +6,19 @@
 package net.accelbyte.extend.platform.demo;
 
 import net.accelbyte.extend.platform.demo.model.SimpleItemInfo;
-import net.accelbyte.sdk.api.iam.models.ModelUserResponseV3;
-import net.accelbyte.sdk.api.iam.operations.users.PublicGetMyUserV3;
+import net.accelbyte.sdk.api.iam.models.AccountCreateTestUserRequestV4;
+import net.accelbyte.sdk.api.iam.models.AccountCreateUserResponseV4;
+import net.accelbyte.sdk.api.iam.operations.users_v4.PublicCreateTestUserV4;
 import net.accelbyte.sdk.api.platform.models.RevocationResult;
 import net.accelbyte.sdk.api.platform.models.OrderInfo;
 import net.accelbyte.sdk.api.platform.models.ItemRevocation;
-import net.accelbyte.sdk.api.iam.wrappers.Users;
+import net.accelbyte.sdk.api.iam.wrappers.UsersV4;
 import net.accelbyte.sdk.core.AccelByteConfig;
 import net.accelbyte.sdk.core.AccelByteSDK;
 import net.accelbyte.sdk.core.client.OkhttpClient;
 import net.accelbyte.sdk.core.repository.DefaultConfigRepository;
 import net.accelbyte.sdk.core.repository.DefaultTokenRepository;
+import net.accelbyte.sdk.core.util.Helper;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -52,23 +54,42 @@ public class PlatformDemo implements Callable<Integer> {
             System.out.println("Log in to Accelbyte...");
             System.out.println("\tBaseUrl: " + configRepo.getBaseURL());
 
-            final String abUsername = configRepo.getUsername();
-            final String abPassword = configRepo.getPassword();
-            final boolean loginResult = abSdk.loginUser(abUsername, abPassword);
+            final boolean loginResult = abSdk.loginClient();
             if (!loginResult) {
                 throw new Exception("Login failed!");
             }
             System.out.println("Login success!");
 
-            Users userWrapper = new Users(abSdk);
-            ModelUserResponseV3 userInfo = userWrapper.publicGetMyUserV3(PublicGetMyUserV3.builder().build());
+            String nameId = Helper.generateUUID();
+            String username = "extend_" + nameId + "_user";
+            String password = "extend(0)";
+            String displayName = "Extend Test User " + nameId;
+            String emailAddress = username + "@dummy.net";
+
+            UsersV4 userWrapper = new UsersV4(abSdk);
+            AccountCreateUserResponseV4 userInfo =
+                userWrapper.publicCreateTestUserV4(
+                    PublicCreateTestUserV4.builder()
+                    .namespace(configRepo.getNamespace())
+                    .body(AccountCreateTestUserRequestV4.builder()
+                        .authType("EMAILPASSWD")
+                        .country("ID")
+                        .dateOfBirth("1990-01-01")
+                        .emailAddress(emailAddress)
+                        .password(password)
+                        .passwordMD5Sum("")
+                        .username(username)
+                        .verified(true)
+                        .uniqueDisplayName(displayName)
+                        .build())
+                    .build());
             if (userInfo == null)
                 throw new Exception("Could not retrieve login user info.");
-            System.out.println("User: " + userInfo.getUserName());
+            System.out.println("User: " + userInfo.getUsername());
 
             final String categoryPath = configRepo.getCategoryPath();
 
-            PlatformDataUnit pdu = new PlatformDataUnit(abSdk,configRepo);
+            PlatformDataUnit pdu = new PlatformDataUnit(abSdk, configRepo);
             try {
                 System.out.print("Configuring platform service grpc target... ");
                 pdu.setPlatformServiceGrpcTargetForRevocation();
