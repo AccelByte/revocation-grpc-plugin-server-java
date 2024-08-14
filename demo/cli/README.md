@@ -31,14 +31,14 @@ sequenceDiagram
 
 ## Build
 
-To build this CLI sample app, execute the following command.
+To build this demo CLI app, execute the following command.
 
 ```bash
-$ ./gradlew installDist
+./gradlew installDist
 ```
 or
 ```bash
-$ ./gradlew imageNative
+./gradlew imageNative
 ```
 to utilize GraalVm.
 
@@ -74,21 +74,21 @@ CLI demo app requires 1 parameter - the grpc server url
 
 - Without any environment variables
 ```bash
-$ ./app/target/install/app/bin/app -b='https://test.accelbyte.io' -c='CLIENT-ID-VALUE' -s='CLIENT-SECRET-VALUE' -n='NAMESPACE-VALUE' -g='<GRPC_PLUGIN_SERVER_URL>'
+./app/target/install/app/bin/app -b='https://test.accelbyte.io' -c='CLIENT-ID-VALUE' -s='CLIENT-SECRET-VALUE' -n='NAMESPACE-VALUE' -g='<GRPC_PLUGIN_SERVER_URL>'
 ```
 - With basic environment variables setup
 ```bash
-$ ./app/target/install/app/bin/app -n='<NAMESPACE-VALUE>' -g='<GRPC_PLUGIN_SERVER_URL>'
+./app/target/install/app/bin/app -n='<NAMESPACE-VALUE>' -g='<GRPC_PLUGIN_SERVER_URL>'
 ```
 - With all environment variables setup
 ```bash
-$ ./app/target/install/app/bin/app -g='<GRPC_PLUGIN_SERVER_URL>'
+./app/target/install/app/bin/app -g='<GRPC_PLUGIN_SERVER_URL>'
 ```
 - Use Extend App instead of grpc server url
 ```bash
-$ ./app/target/install/app/bin/app -a='<EXTEND_APP_NAME>'
+./app/target/install/app/bin/app -a='<EXTEND_APP_NAME>'
 ```
 - Show usage help
 ```bash
- $ ./app/target/install/app/bin/app -h
+ ./app/target/install/app/bin/app -h
 ```
