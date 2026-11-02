@@ -26,7 +26,7 @@ dependencies {
 	implementation 'org.projectlombok:lombok:1.18.30'
 	implementation 'org.springframework.boot:spring-boot-starter:3.3.13'
 	implementation 'org.springframework.boot:spring-boot-starter-web:3.3.13'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator:3.3.13'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator:3.4.0'
 
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.13'
